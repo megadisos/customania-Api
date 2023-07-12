@@ -6,6 +6,7 @@ const MPServices = require("../services/mercadoPago");
  * @param res Express Response 
  */
 const getNewPreferenceId = async (req,res) =>{
+    
     const {body} = req
     const preferenceId = await MPServices.createPreferenceId(body)
     res.send(preferenceId)
