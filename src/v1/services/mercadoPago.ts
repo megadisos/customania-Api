@@ -1,4 +1,4 @@
-import { Prefrence } from "../models/mercadoPago";
+import { PaymentInfo, Prefrence } from "../models/mercadoPago";
 const mercadopago = require("mercadopago");
 require('dotenv').config();
 /**
@@ -24,6 +24,24 @@ const createPreferenceId = (preference:Prefrence) =>{
   });
 }
 
+/**
+ * Create preference 
+ * @param preference Prefrence interface
+ */
+const processPayment = (paymentInfo:PaymentInfo) =>{
+  authenticationMercadoPago()
+ return mercadopago.payment.save(paymentInfo)
+    .then((resp)=>{
+      return resp.body;
+    })
+    .catch((error) =>{
+      console.error(error);
+  });
+ 
+  
+}
+
 module.exports = {
-    createPreferenceId
+    createPreferenceId,
+    processPayment
 }
