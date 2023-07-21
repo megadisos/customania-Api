@@ -1,17 +1,33 @@
-// In src/index.js 
-const express = require("express"); 
-const mercadoPagoRouter= require("./v1/routes/mercadoPagoRoutes");
-const cors = require("cors");
+// In src/index.js
+const express = require('express')
+require('dotenv').config();
+const mercadoPagoRouter = require('./v1/routes/mercadoPagoRoutes')
+const productsRouter = require('./v1/routes//productsRoutes')
+const mongoose = require('mongoose');
 
-const app = express(); 
-const PORT = process.env.PORT || 3001; 
-
-app.use(cors()); 
-app.use(express.json());
-
-app.use("/api/v1/mercado-pago", mercadoPagoRouter);
+const mongoString = process.env.DATABASE_URL;
+const cors = require('cors')
 
 
-app.listen(PORT, () => { 
-    console.log(`API is listening on port ${PORT}`); 
+mongoose.connect(mongoString);
+const database = mongoose.connection;
+database.on('error', (error) => {
+  console.log(error)
+})
+
+database.once('connected', () => {
+  console.log('Database Connected');
+})
+
+const app = express()
+const PORT = process.env.PORT || 3001
+
+app.use(cors())
+app.use(express.json())
+
+app.use('/api/v1/mercado-pago', mercadoPagoRouter)
+app.use('/api/v1/', productsRouter)
+
+app.listen(PORT, () => {
+  console.log(`API is listening on port ${PORT}`)
 })
