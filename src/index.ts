@@ -3,6 +3,7 @@ const express = require('express')
 require('dotenv').config();
 const mercadoPagoRouter = require('./v1/routes/mercadoPagoRoutes')
 const productsRouter = require('./v1/routes//productsRoutes')
+const authenticationRouter = require('./v1/routes/authenticationRoutes')
 const mongoose = require('mongoose');
 
 const mongoString = process.env.DATABASE_URL;
@@ -26,6 +27,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/v1/mercado-pago', mercadoPagoRouter)
+app.use('/api/v1/auth', authenticationRouter)
 app.use('/api/v1/', productsRouter)
 
 app.listen(PORT, () => {

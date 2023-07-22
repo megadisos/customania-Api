@@ -11,7 +11,8 @@ const productsSchema = new mongooseMd.Schema({
   },
   created: {
     required: true,
-    type: Date
+    type: Date,
+    default:Date.now
   },
   name: {
     required: true,
