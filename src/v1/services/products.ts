@@ -8,6 +8,17 @@ const getAllProducts = async () => {
   }
 
 
+ /**
+ * Get Product by id
+ * @param id
+ */
+const getProductById = async (id:string) => {
+  const product = await ModelProduct.findById(id)
+  return product
+}
+
+
   module.exports = {
-    getAllProducts
+    getAllProducts,
+    getProductById
   }
