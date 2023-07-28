@@ -47,10 +47,10 @@ const loginUser = async (user:User) => {
      // create token
      const token = jwt.sign({
         name: user.username,
-        id: user._id
+        id: luser._id
     }, process.env.SERVER_TOKEN)
 
-    return {error:null,data:'authenticado',token:token}
+    return {error:null,data:'authenticado',token:token,userId:luser._id}
 
   }
 
