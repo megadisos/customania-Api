@@ -4,3 +4,8 @@ export interface User {
     password:string,
     username:string
 }
+
+export interface Auth {
+    token:string,
+    userId:string
+}

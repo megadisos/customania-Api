@@ -26,7 +26,32 @@ const AutServices =  require('../services/authentication')
     return res.status(400).send(response.error)
   }
   
+    /**
+ *Logout user
+ * @param req Express Request
+ * @param res Express Response
+ */
+ const logOutUserController = async (req, res) => {
+  const { body } = req
+  const response = await AutServices.logOutUser(body)
+  return res.status(200).send(response)
+}
+
+
+    /**
+ * Is Token valid controller 
+ * @param req Express Request
+ * @param res Express Response
+ */
+ const isTokenValidController= async (req, res) => {
+  const { body } = req
+  const response = await AutServices.isTokenValid(body)
+  return res.status(200).send(response)
+}
+
   module.exports = {
     registerUserController,
-    loginUserController
+    loginUserController,
+    isTokenValidController,
+    logOutUserController
   }

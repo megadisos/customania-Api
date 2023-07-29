@@ -1,5 +1,7 @@
-import { User } from "../models/authentication"
+import { Schema } from "mongoose";
+import { Auth, User } from "../models/authentication"
 const ModelUsers = require('../database/models/users')
+const ModelAuth = require('../database/models/auth')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -50,10 +52,35 @@ const loginUser = async (user:User) => {
         id: luser._id
     }, process.env.SERVER_TOKEN)
 
+   const query = new ModelAuth({
+        userid:luser.id,
+        token:token,
+    })
+    await query.save()
     return {error:null,data:'authenticado',token:token,userId:luser._id}
 
   }
 
+  /**
+ * Is Valid Token
+ * @param token string
+ */
+  const isTokenValid = async (auth:Auth) => {
+    const currentToken = await ModelAuth.findOne({token:auth.token,userid:auth.userId})
+    const verified = jwt.verify(auth.token, process.env.SERVER_TOKEN)
+    if(!currentToken || !verified) return false
+    return true
+  }
+
+    /**
+ * log out
+ * @param auth Authentication Info
+ */
+    const logOutUser = async (auth:Auth) => {
+       const deleteQuery = await ModelAuth.deleteOne({token:auth.token,userid:auth.userId})
+       if(deleteQuery.deletedCount === 1) return true
+       return false
+}
 
   const verifyToken = (req, res, next) => {
     const token = req.header('auth-token')
@@ -71,5 +98,7 @@ const loginUser = async (user:User) => {
 module.exports = {
     registerNewUser,
     loginUser,
-    verifyToken
+    verifyToken,
+    isTokenValid,
+    logOutUser
 }
