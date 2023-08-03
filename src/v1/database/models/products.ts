@@ -41,7 +41,8 @@ const productsSchema = new mongooseMd.Schema({
   },
   offer: {
     required: false,
-    type: Number
+    type: Number,
+    default:0
   },
   price: {
     required: true,

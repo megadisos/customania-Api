@@ -21,6 +21,34 @@ const getProductsByPage = async (skip:number,limit:number) => {
     const products = await ModelProduct.find().skip(skip).limit(limit)
     return products
   }
+
+/**
+ * Get All offer Products
+ * @param limit
+ */
+  const getProductsByOffer = async (limit:number) =>{
+    const offerProducts = await ModelProduct.find({ offer: { $ne: 0 } } ).sort({ offer: -1 }).limit(limit || 10)
+    return offerProducts
+  }
+
+  /**
+ * Get The recent products
+ *  @param limit
+ */
+  const getProductsByDate = async (limit:number) =>{
+    const recentProducts = await ModelProduct.find().sort({ created: -1 }).limit(limit || 10)
+    return recentProducts
+  }
+
+    /**
+ * Get The recent products
+ *  @param limit
+ */
+    const getProductsByRating = async (limit:number) =>{
+      const recentProducts = await ModelProduct.find().sort({ rating: -1 }).limit(limit || 10)
+      return recentProducts
+    }
+
  /**
  * Get Product by id
  * @param id
@@ -35,5 +63,8 @@ const getProductById = async (id:string) => {
     getAllProducts,
     getProductById,
     getProductsCount,
-    getProductsByPage
+    getProductsByPage,
+    getProductsByOffer,
+    getProductsByDate,
+    getProductsByRating
   }

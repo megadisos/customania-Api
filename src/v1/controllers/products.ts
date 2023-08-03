@@ -12,7 +12,6 @@ const LIMIT = 10
   const metadata = { items:LIMIT,
     totalItems: count,
     page:page}
-  console.log('este es el total ',count)
   if(count === 0) return res.send({data:{},metadata})
   if(count < LIMIT) {
     const products = await  ProductsServices.getAllProducts()
@@ -23,13 +22,23 @@ const LIMIT = 10
   if(page > pages) return res.status(400).send('La pagina no existe')
   const limit = LIMIT;
   const skip = LIMIT * (page - 1);
-   console.log(skip,limit)
    const filteredProducts = await ProductsServices.getProductsByPage(skip,limit)
    return res.status(200).send({data:filteredProducts,metadata})
   }
+  /**
+ *Get 10 Offer products
+ * @param req Express Request
+ * @param res Express Response
+ */
+  const getProductsByOfferController = async (req,res) =>{
+    let {limit} = req.query
+    limit =  parseInt(limit)
+    const products = await ProductsServices.getProductsByOffer(limit)
+    return res.status(200).send(products)
+  }
 
   /**
- *Get All Products
+ *Get All Products with offer
  * @param req Express Request
  * @param res Express Response
  */
@@ -39,9 +48,36 @@ const LIMIT = 10
   res.send(product)
 }
 
+
+  /**
+ *Get  products by date
+ * @param req Express Request
+ * @param res Express Response
+ */
+ const getProductsByDateController = async (req,res) =>{
+  let {limit} = req.query
+  limit =  parseInt(limit)
+  const products = await ProductsServices.getProductsByDate(limit)
+  return res.status(200).send(products)
+}
   
 
+  /**
+ *Get  products by rating
+ * @param req Express Request
+ * @param res Express Response
+ */
+ const getProductsByRatingController = async (req,res) =>{
+  let {limit} = req.query
+  limit =  parseInt(limit)
+  const products = await ProductsServices.getProductsByRating(limit)
+  return res.status(200).send(products)
+}
+  
   module.exports ={
     getProductsController,
-    getProductsByIdController
+    getProductsByIdController,
+    getProductsByOfferController,
+    getProductsByDateController,
+    getProductsByRatingController
   }
