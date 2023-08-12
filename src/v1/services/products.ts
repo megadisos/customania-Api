@@ -1,3 +1,5 @@
+import { Items } from "../models/sales"
+
 const ModelProduct = require('../database/models/products')
 /**
  * Get All products
@@ -52,7 +54,7 @@ const getProductsByPage = async (skip:number,limit:number) => {
  * @param limit
  */
   const getProductsByOffer = async (limit:number) =>{
-    const offerProducts = await ModelProduct.find({ offer: { $ne: 0 } } ).sort({ offer: -1 }).limit(limit || 10)
+    const offerProducts = await ModelProduct.find({ offer: { $ne: 0 },available: { $ne: 0 } } ).sort({ offer: -1 }).limit(limit || 10)
     return offerProducts
   }
 
@@ -61,7 +63,7 @@ const getProductsByPage = async (skip:number,limit:number) => {
  *  @param limit
  */
   const getProductsByDate = async (limit:number) =>{
-    const recentProducts = await ModelProduct.find().sort({ created: -1 }).limit(limit || 10)
+    const recentProducts = await ModelProduct.find({ available: { $ne: 0 } }).sort({ created: -1 }).limit(limit || 10)
     return recentProducts
   }
 
@@ -70,7 +72,7 @@ const getProductsByPage = async (skip:number,limit:number) => {
  *  @param limit
  */
     const getProductsByRating = async (limit:number) =>{
-      const recentProducts = await ModelProduct.find().sort({ rating: -1 }).limit(limit || 10)
+      const recentProducts = await ModelProduct.find({ available: { $ne: 0 } }).sort({ rating: -1 }).limit(limit || 10)
       return recentProducts
     }
 
@@ -83,6 +85,38 @@ const getProductById = async (id:string) => {
   return product
 }
 
+ /**
+ * Update Product quantity by id
+ * @param productId
+ * @param item Items
+ */
+ const updateProductQuantityById = async (productId:string,item:Items) => {
+  const product = await ModelProduct.findById(productId)
+  if(!product) return {error:'El producto no existe'}
+  let updatedProduct = product
+  updatedProduct.available = updatedProduct.available - item.quantity
+  console.log('esto es ',updatedProduct)
+  if(item.size && item.size !== null) {
+    updatedProduct.sizes =  updatedProduct.sizes.map(size=>{
+      if(size.size === item.size){
+        const newSize = size.available - item.quantity
+        return {...size,available:newSize}
+      } 
+      return size
+    })
+  } 
+
+  try {
+    const upProduct = await ModelProduct.updateOne(
+        {_id:productId},updatedProduct)
+    return {error:null,
+        data:updatedProduct}
+} catch (error) {
+    return {error,data:null}
+}
+}
+
+
 
   module.exports = {
     getAllProducts,
@@ -94,5 +128,6 @@ const getProductById = async (id:string) => {
     getProductsByRating,
     getProductsCountByCategory,
     getAllProductsByCategory,
-    getProductsByPageByCategory
+    getProductsByPageByCategory,
+    updateProductQuantityById
   }

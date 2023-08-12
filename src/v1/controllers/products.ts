@@ -77,11 +77,27 @@ const LIMIT = 12
   const products = await ProductsServices.getProductsByRating(limit)
   return res.status(200).send(products)
 }
+
+  /**
+ *Update product quantity
+ * @param req Express Request
+ * @param res Express Response
+ */
+
+ const updateProductQuantityController= async (req, res) => {
+  const { body } = req
+  const productId = req.params.id
+console.log(body,productId)
+  const response = await ProductsServices.updateProductQuantityById(productId,body)
+  if(response.error === null) return res.status(200).send(response)
+  return res.status(400).send(response.error)
+}
   
   module.exports ={
     getProductsController,
     getProductsByIdController,
     getProductsByOfferController,
     getProductsByDateController,
-    getProductsByRatingController
+    getProductsByRatingController,
+    updateProductQuantityController
   }

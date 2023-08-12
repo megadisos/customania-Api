@@ -36,11 +36,9 @@ const salesSchema = new mongooseSales.Schema({
       },
     identification: {
         type: {
-            required: true,
             type: String
           },
         number: {
-            required: true,
             type: String
           },
     },
@@ -87,7 +85,10 @@ title:  {
   unit_price: {
     required: true,
     type: Number
- }}
+ },
+ size: {
+  type: String
+}}
 ],
 ammount:{
   required: true,

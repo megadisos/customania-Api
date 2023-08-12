@@ -1,7 +1,7 @@
 interface Payer {
     email: string
     entity_type?:string
-    identification: Identification
+    identification?: Identification
 }
 interface Identification {
     type: string,
@@ -16,11 +16,12 @@ interface Delivery {
         address:  string,
 }
 
-interface Items {
+export interface Items {
     id: string,
     title: string,
     quantity: number,
-    unit_price: number
+    unit_price: number,
+    size?:string
 }
 export interface SaleStatus {
     status: string,

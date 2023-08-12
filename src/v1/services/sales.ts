@@ -66,7 +66,7 @@ const updateSaleStaus = async (newStatus:SaleStatus,transactionId:string) =>{
                 delivery_status:isTransactionIdCreated.isDelivery?newStatus.delivery_status:'to_deliver'
             })
         return {error:null,
-            data:upSale}
+            data:isTransactionIdCreated}
     } catch (error) {
         return {error}
     }
