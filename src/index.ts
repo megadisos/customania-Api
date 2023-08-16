@@ -2,7 +2,8 @@
 const express = require('express')
 require('dotenv').config();
 const mercadoPagoRouter = require('./v1/routes/mercadoPagoRoutes')
-const productsRouter = require('./v1/routes//productsRoutes')
+const productsRouter = require('./v1/routes/productsRoutes')
+const usersRouter = require('./v1/routes/usersRoutes')
 const authenticationRouter = require('./v1/routes/authenticationRoutes')
 const salesRouter = require('./v1/routes/salesRoutes')
 const mongoose = require('mongoose');
@@ -31,6 +32,7 @@ app.use('/api/v1/mercado-pago', mercadoPagoRouter)
 app.use('/api/v1/auth', authenticationRouter)
 app.use('/api/v1/sales', salesRouter)
 app.use('/api/v1/', productsRouter)
+app.use('/api/v1/users',usersRouter)
 
 app.listen(PORT, () => {
   console.log(`API is listening on port ${PORT}`)
