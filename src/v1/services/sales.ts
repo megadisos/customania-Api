@@ -1,7 +1,8 @@
 import { Sale, SaleStatus } from "../models/sales"
 const ModelUsers = require('../database/models/users')
 const ModelSale = require('../database/models/sales')
-const mongoose = require('mongoose');
+const mongooseTypes = require('mongoose');
+
 /**
  * Register New Sale
  * @param sale model
@@ -71,7 +72,58 @@ const updateSaleStaus = async (newStatus:SaleStatus,transactionId:string) =>{
         return {error}
     }
 }
+
+  /**
+ * Get User sales
+ * @param newStatus model
+ * @param transactionId string
+ */
+const getUserSales = async (userId:string) =>{
+    try {
+       if(userId.length < 24) return {error:'not valid user Id',data:null}
+        const objectIdUserId = new mongooseTypes.Types.ObjectId(userId)
+        const sales =  await ModelSale.find({userId:objectIdUserId}).sort({ creationdate: -1 })
+        return {error:null,data:sales}
+    } catch (error) {
+        return {error:error,data:null}
+    }
+}
+
+/**
+ * Get Sales by page
+ */
+const getSalesByPage = async (skip:number,limit:number) => {
+  
+    const sales = await ModelSale.find().skip(skip).limit(limit)
+    return sales
+  }
+/**
+ * Get Users count
+ */
+const getUserSalesCount = async (userId:String) =>{
+    const objectIdUserId = new mongooseTypes.Types.ObjectId(userId)
+    const productsCount = await ModelSale.count({userId:objectIdUserId})
+    return productsCount
+  }
+  /**
+ * Get All sales
+ * @param newStatus model
+ * @param transactionId string
+ */
+  const getAllSales = async () =>{
+    try {
+        const sales =  await ModelSale.find()
+        return {error:null,data:sales}
+    } catch (error) {
+        return {error:error,data:null}
+    }
+}
+
   module.exports = {
     registerNewSale,
-    updateSaleStaus
+    updateSaleStaus,
+    getUserSales,
+    getAllSales,
+    getUserSalesCount,
+    getSalesByPage
 }

@@ -95,7 +95,6 @@ const getProductById = async (id:string) => {
   if(!product) return {error:'El producto no existe'}
   let updatedProduct = product
   updatedProduct.available = updatedProduct.available - item.quantity
-  console.log('esto es ',updatedProduct)
   if(item.size && item.size !== null) {
     updatedProduct.sizes =  updatedProduct.sizes.map(size=>{
       if(size.size === item.size){

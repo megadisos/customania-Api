@@ -7,7 +7,6 @@ const LIMIT = 12
  */
  const getProductsController = async (req, res) => {
   let {page,category} = req.query
-   console.log(category)
   page = parseInt(page)
   const count = category ? await ProductsServices.getProductsCountByCategory(category): await  ProductsServices.getProductsCount()
   let metadata = { items:LIMIT,
@@ -17,7 +16,6 @@ const LIMIT = 12
   const pages = Math.ceil(count / LIMIT)
   metadata['TotalPages'] = pages
   if(page > pages) return res.status(400).send('La pagina no existe')
-  console.log(page,pages)
   if(count < LIMIT) {
     const products =category ? await ProductsServices.getAllProductsByCategory(category): await  ProductsServices.getAllProducts()
     return res.send({data:products,metadata})
