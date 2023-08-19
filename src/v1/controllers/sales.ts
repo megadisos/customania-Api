@@ -49,9 +49,8 @@ const getUserSalesController = async (req, res) => {
   }
   const offset = pagination.offset;
   const limit = pagination.limit;
-
   const userSales = sales.slice(offset, offset + limit);
-  return res.status(200).send({ data: userSales, metadata: pagination });
+  return res.status(200).send({ data: userSales, metadata: {...pagination,totalItems:totalSales} });
 };
   /**
  *Get sales

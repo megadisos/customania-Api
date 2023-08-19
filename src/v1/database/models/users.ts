@@ -5,6 +5,10 @@ const usersSchema = new mongooseUsers.Schema({
     required: true,
     type: String
   },
+  profileImage:{
+    type: String,
+    default:null
+  },
   password: {
     required: true,
     type: String
