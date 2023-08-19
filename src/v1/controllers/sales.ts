@@ -30,33 +30,29 @@ const SharedServices =  require('../services/shared')
 }
 
 /**
- *Get user sale
+ * Get user sale
  * @param req Express Request
  * @param res Express Response
  */
- const getUserSalesController= async (req, res) => {
-  const LIMIT = 1
-  const {page} = req.query
-  const userId = req.params.id
-  const salesCount = await SalesServices.getUserSalesCount(userId)
-  console.log(salesCount)
-  const pagination =  SharedServices.applyPagination(LIMIT,page,salesCount)
+const getUserSalesController = async (req, res) => {
+  const LIMIT =2;
+  const { page } = req.query;
+  const userId = req.params.id;
 
-  if(pagination.msg === 'no-data') return res.status(200).send({data:[],error:null,metadata:pagination.metadata})
-  
-  if(pagination.msg === 'no-page') return res.status(400).send({data:null,error:'No page'})
-  
-  
-  if(pagination.msg === 'less-limit'){
-    const sale = await SalesServices.getUserSales(userId)
-    return res.status(200).send({...sale,metadata:pagination.metadata})
-  } 
-  if(pagination.msg === 'data'){
-    const sale = await SalesServices.getSalesByPage(pagination.skip,pagination.limit)
-    return res.status(200).send({data:sale,error:null,metadata:pagination.metadata})
-  } 
+  const sales = await SalesServices.getUserSales(userId);
+  const totalSales = sales.length;
+
+  const currentPage = parseInt(page) || 1;
+  const pagination = SharedServices.paginate(totalSales, currentPage, LIMIT);
+  if (!Array.isArray(sales)) {
+    return res.status(500).send('Error retrieving user sales');
   }
+  const offset = pagination.offset;
+  const limit = pagination.limit;
 
+  const userSales = sales.slice(offset, offset + limit);
+  return res.status(200).send({ data: userSales, metadata: pagination });
+};
   /**
  *Get sales
  * @param req Express Request

@@ -1,32 +1,50 @@
 const ProductsServices = require('../services/products')
+const SharedService =  require('../services/shared')
 const LIMIT = 12
+
 /**
- *Get All Products
+ * Get All Products
  * @param req Express Request
  * @param res Express Response
  */
- const getProductsController = async (req, res) => {
-  let {page,category} = req.query
-  page = parseInt(page)
-  const count = category ? await ProductsServices.getProductsCountByCategory(category): await  ProductsServices.getProductsCount()
-  let metadata = { items:LIMIT,
+const getProductsController = async (req, res) => {
+  let { page, category } = req.query;
+  page = parseInt(page);
+  const limit = LIMIT;
+
+  const count = category
+    ? await ProductsServices.getProductsCountByCategory(category)
+    : await ProductsServices.getProductsCount();
+
+  const pagination = SharedService.paginate(count, page, limit);
+
+  const metadata = {
+    items: limit,
     totalItems: count,
-    page:page}
-  if(count === 0) return res.send({data:{},metadata})
-  const pages = Math.ceil(count / LIMIT)
-  metadata['TotalPages'] = pages
-  if(page > pages) return res.status(400).send('La pagina no existe')
-  if(count < LIMIT) {
-    const products =category ? await ProductsServices.getAllProductsByCategory(category): await  ProductsServices.getAllProducts()
-    return res.send({data:products,metadata})
+    ...pagination,
+  };
+
+  if (count === 0) return res.send({ data: {}, metadata });
+
+  // if (pagination.currentPage > pagination.totalPages) {
+  //   return res.status(400).send('La pagina no existe');
+  // }
+
+  let products;
+
+  if (count < limit) {
+    products = category
+      ? await ProductsServices.getAllProductsByCategory(category)
+      : await ProductsServices.getAllProducts();
+  } else {
+    const skip = pagination.offset;
+    products = category
+      ? await ProductsServices.getProductsByPageByCategory(category, skip, limit)
+      : await ProductsServices.getProductsByPage(skip, limit);
   }
 
-  
-  const limit = LIMIT;
-  const skip = LIMIT * (page - 1);
-   const filteredProducts = category ? await ProductsServices.getProductsByPageByCategory(category,skip,limit):await ProductsServices.getProductsByPage(skip,limit)
-   return res.status(200).send({data:filteredProducts,metadata})
-  }
+  return res.status(200).send({ data: products, metadata });
+};
   /**
  *Get 10 Offer products
  * @param req Express Request

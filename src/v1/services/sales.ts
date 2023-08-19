@@ -83,9 +83,9 @@ const getUserSales = async (userId:string) =>{
        if(userId.length < 24) return {error:'not valid user Id',data:null}
         const objectIdUserId = new mongooseTypes.Types.ObjectId(userId)
         const sales =  await ModelSale.find({userId:objectIdUserId}).sort({ creationdate: -1 })
-        return {error:null,data:sales}
+        return sales
     } catch (error) {
-        return {error:error,data:null}
+        return error
     }
 }
 
