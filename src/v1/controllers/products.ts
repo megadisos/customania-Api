@@ -103,17 +103,60 @@ const getProductsController = async (req, res) => {
  const updateProductQuantityController= async (req, res) => {
   const { body } = req
   const productId = req.params.id
-console.log(body,productId)
   const response = await ProductsServices.updateProductQuantityById(productId,body)
   if(response.error === null) return res.status(200).send(response)
   return res.status(400).send(response.error)
 }
+
+  /**
+ *Create product controller
+ * @param req Express Request
+ * @param res Express Response
+ */
+
+ const createProductController= async (req, res) => {
+  const { body } = req
+  const response = await ProductsServices.createProduct(body)
+  if(response.error === null) return res.status(200).send(response)
+   return res.status(400).send(response)
+}
+
+
+  /**
+ *Delete product controller
+ * @param req Express Request
+ * @param res Express Response
+ */
+
+ const deleteProductController= async (req, res) => {
+  const productId = req.params.id
+  const response = await ProductsServices.deleteProduct(productId)
+  if(response.error === null) return res.status(200).send(response)
+   return res.status(400).send(response)
+}
   
+  /**
+ *UPdate product controller
+ * @param req Express Request
+ * @param res Express Response
+ */
+
+ const updateProductController= async (req, res) => {
+  const { body } = req
+  const productId = req.params.id
+  const response = await ProductsServices.updateProduct(body,productId)
+  if(response.error === null) return res.status(200).send(response)
+   return res.status(400).send(response)
+}
+
   module.exports ={
     getProductsController,
     getProductsByIdController,
     getProductsByOfferController,
     getProductsByDateController,
     getProductsByRatingController,
-    updateProductQuantityController
+    updateProductQuantityController,
+    createProductController,
+    deleteProductController,
+    updateProductController
   }

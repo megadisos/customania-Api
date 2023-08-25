@@ -6,14 +6,14 @@ const productsRouter = require('./v1/routes/productsRoutes')
 const usersRouter = require('./v1/routes/usersRoutes')
 const authenticationRouter = require('./v1/routes/authenticationRoutes')
 const salesRouter = require('./v1/routes/salesRoutes')
-const mongoose = require('mongoose');
+const ThirdParty = require('./v1/third-parties/index');
 
 const mongoString = process.env.DATABASE_URL;
 const cors = require('cors')
 
 
-mongoose.connect(mongoString);
-const database = mongoose.connection;
+ThirdParty.mongoose.connect(mongoString);
+const database = ThirdParty.mongoose.connection;
 database.on('error', (error) => {
   console.log(error)
 })

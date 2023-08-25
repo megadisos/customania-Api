@@ -1,6 +1,8 @@
+import { Product } from "../models/products"
 import { Items } from "../models/sales"
 
 const ModelProduct = require('../database/models/products')
+const ThirdPartyProducts = require('../third-parties');
 /**
  * Get All products
  */
@@ -117,6 +119,65 @@ const getProductById = async (id:string) => {
 
 
 
+ /**
+ * Create product
+ * @param product
+ */
+ const createProduct = async (product:Product) => {
+  const existName = await ModelProduct.find({name:product.name})
+
+  if(!existName) return {error:'El nombre ya existe',data:null}
+
+  try {
+    const nProduct = new ModelProduct(product)
+    const savedProduct = await nProduct.save()
+    return {error:null,
+        data:savedProduct}
+} catch (error) {
+    return {error,data:null}
+}
+}
+
+
+ /**
+ * Delete a product
+ * @param product
+ */
+ const deleteProduct = async (productId:string) => {
+  const objectIdProductId = new ThirdPartyProducts.mongooseTypes.Types.ObjectId(productId)
+  const product = await ModelProduct.findById(objectIdProductId)
+
+
+  if(!product) return {error:'El producto no existe',data:null}
+
+  try {
+    const deleteProd = await ModelProduct.deleteOne({_id: objectIdProductId })
+    return {error:null,
+        data:deleteProd}
+} catch (error) {
+    return {error,data:null}
+}
+ }
+
+ /**
+ * Update  product
+ * @param product
+ */
+ const updateProduct = async (product:Product,productId:string) => {
+  const objectIdProductId = new ThirdPartyProducts.mongooseTypes.Types.ObjectId(productId)
+  const prod = await ModelProduct.findById(objectIdProductId)
+
+  if(!prod) return {error:'El producto no existe',data:null}
+  try {
+    const upProd = await ModelProduct.updateOne({_id: objectIdProductId},product)
+    return {error:null,
+        data:product}
+} catch (error) {
+    return {error,data:null}
+}
+
+
+}
   module.exports = {
     getAllProducts,
     getProductById,
@@ -128,5 +189,8 @@ const getProductById = async (id:string) => {
     getProductsCountByCategory,
     getAllProductsByCategory,
     getProductsByPageByCategory,
-    updateProductQuantityById
+    updateProductQuantityById,
+    createProduct,
+    deleteProduct,
+    updateProduct
   }

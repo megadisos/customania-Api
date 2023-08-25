@@ -1,7 +1,7 @@
 import { Sale, SaleStatus } from "../models/sales"
 const ModelUsers = require('../database/models/users')
 const ModelSale = require('../database/models/sales')
-const mongooseTypes = require('mongoose');
+const ThirdPartySales= require('../third-parties');
 
 /**
  * Register New Sale
@@ -81,7 +81,7 @@ const updateSaleStaus = async (newStatus:SaleStatus,transactionId:string) =>{
 const getUserSales = async (userId:string) =>{
     try {
        if(userId.length < 24) return {error:'not valid user Id',data:null}
-        const objectIdUserId = new mongooseTypes.Types.ObjectId(userId)
+        const objectIdUserId = new ThirdPartySales.mongooseTypes.Types.ObjectId(userId)
         const sales =  await ModelSale.find({userId:objectIdUserId}).sort({ creationdate: -1 })
         return sales
     } catch (error) {
@@ -101,7 +101,7 @@ const getSalesByPage = async (skip:number,limit:number) => {
  * Get Users count
  */
 const getUserSalesCount = async (userId:String) =>{
-    const objectIdUserId = new mongooseTypes.Types.ObjectId(userId)
+    const objectIdUserId = new ThirdPartySales.mongooseTypes.Types.ObjectId(userId)
     const productsCount = await ModelSale.count({userId:objectIdUserId})
     return productsCount
   }
@@ -125,5 +125,5 @@ const getUserSalesCount = async (userId:String) =>{
     getUserSales,
     getAllSales,
     getUserSalesCount,
-    getSalesByPage
+    getSalesByPage,
 }

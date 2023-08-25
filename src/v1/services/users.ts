@@ -1,5 +1,5 @@
 const ModelUsers = require('../database/models/users')
-const mongooseTypes = require('mongoose');
+const ThirdPt = require('../third-parties');
 
 /**
  * Get User
@@ -7,7 +7,7 @@ const mongooseTypes = require('mongoose');
  */
 const getUser = async (userId:string) => {
     try {
-        const objectIdUserId = new mongooseTypes.Types.ObjectId(userId);
+        const objectIdUserId = new ThirdPt.mongooseTypes.Types.ObjectId(userId);
         let user = await ModelUsers.findOne({_id:objectIdUserId})
         if(!user) return {error:"User dont exist",data:null}
         user['password'] = null
