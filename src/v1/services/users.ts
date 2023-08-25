@@ -7,7 +7,7 @@ const ThirdPt = require('../third-parties');
  */
 const getUser = async (userId:string) => {
     try {
-        const objectIdUserId = new ThirdPt.mongooseTypes.Types.ObjectId(userId);
+        const objectIdUserId = new ThirdPt.mongoose.Types.ObjectId(userId);
         let user = await ModelUsers.findOne({_id:objectIdUserId})
         if(!user) return {error:"User dont exist",data:null}
         user['password'] = null

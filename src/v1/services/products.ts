@@ -144,7 +144,7 @@ const getProductById = async (id:string) => {
  * @param product
  */
  const deleteProduct = async (productId:string) => {
-  const objectIdProductId = new ThirdPartyProducts.mongooseTypes.Types.ObjectId(productId)
+  const objectIdProductId = new ThirdPartyProducts.mongoose.Types.ObjectId(productId)
   const product = await ModelProduct.findById(objectIdProductId)
 
 
@@ -164,7 +164,7 @@ const getProductById = async (id:string) => {
  * @param product
  */
  const updateProduct = async (product:Product,productId:string) => {
-  const objectIdProductId = new ThirdPartyProducts.mongooseTypes.Types.ObjectId(productId)
+  const objectIdProductId = new ThirdPartyProducts.mongoose.Types.ObjectId(productId)
   const prod = await ModelProduct.findById(objectIdProductId)
 
   if(!prod) return {error:'El producto no existe',data:null}
