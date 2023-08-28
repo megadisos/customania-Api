@@ -83,8 +83,15 @@ const getProductsByPage = async (skip:number,limit:number) => {
  * @param id
  */
 const getProductById = async (id:string) => {
-  const product = await ModelProduct.findById(id)
-  return product
+ try {
+  const objectIdProductId = new ThirdPartyProducts.mongoose.Types.ObjectId(id)
+  const product = await ModelProduct.findById(objectIdProductId)
+  if(!product) return {error:'No existe este producto',data:null}
+  return {error:null,data:product}
+ } catch (error) {
+    return {error:'Error inesperado',data:null}
+ }
+  
 }
 
  /**

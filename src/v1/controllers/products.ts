@@ -64,8 +64,9 @@ const getProductsController = async (req, res) => {
  */
  const getProductsByIdController = async (req, res) => {
   const id = req.params.id
-  const product = await  ProductsServices.getProductById(id)
-  res.send(product)
+    const response = await  ProductsServices.getProductById(id)
+if(response.error === null)  return res.status(200).send(response)
+return  res.status(400).send(response)
 }
 
 

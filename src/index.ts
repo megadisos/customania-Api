@@ -7,6 +7,7 @@ const usersRouter = require('./v1/routes/usersRoutes')
 const authenticationRouter = require('./v1/routes/authenticationRoutes')
 const salesRouter = require('./v1/routes/salesRoutes')
 const ThirdParty = require('./v1/third-parties/index');
+const categoriesRouter = require('./v1/routes/categoriesRouter')
 
 const mongoString = process.env.DATABASE_URL;
 const cors = require('cors')
@@ -33,6 +34,7 @@ app.use('/api/v1/auth', authenticationRouter)
 app.use('/api/v1/sales', salesRouter)
 app.use('/api/v1/', productsRouter)
 app.use('/api/v1/users',usersRouter)
+app.use('/api/v1/categories',categoriesRouter)
 
 app.listen(PORT, () => {
   console.log(`API is listening on port ${PORT}`)
